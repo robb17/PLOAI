@@ -1,6 +1,6 @@
-#PLOAI - Towards a Pot-Limit Omaha Agent
+# PLOAI - Towards a Pot-Limit Omaha Agent
 
-Please see https://docs.google.com/presentation/d/1xx-S2HE10ZZ7cnxWcXCnddAgX2nU1-tm62EJN41ATQs/edit?usp=sharing for an in-depth walkthrough of the ideas implemented in this project.
+Please see [here](https://docs.google.com/presentation/d/1xx-S2HE10ZZ7cnxWcXCnddAgX2nU1-tm62EJN41ATQs/edit?usp=sharing) for an in-depth walkthrough of the ideas implemented in this project.
 
 This work aims to produce a game-playing agent that is at least as good as a "decent" human player through two rounds of game abstraction and then learning via CFR or Monte Carlo CFR.
 
