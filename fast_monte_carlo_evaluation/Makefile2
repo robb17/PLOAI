@@ -1,0 +1,7 @@
+all:	podds
+
+podds:	podds.c poker.c xorshift.c
+	gcc -O3 -pthread -o podds podds.c poker.c xorshift.c
+
+clean:
+	rm podds podds-perftest
