@@ -321,6 +321,8 @@ class BucketManager:
 				superbucket_generation_needed = True
 		if not self.existing_superbucket_pickle or superbucket_generation_needed:
 			self.generate_superbuckets()
+		if self.superbucket_pickle_to_write:
+			pickle.dump(self.all_groupings, open(self.pickle_to_write, "wb"))
 
 	def generate_superbuckets(self):
 		n_superbuckets = 10
