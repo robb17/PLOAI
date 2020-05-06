@@ -20,6 +20,6 @@ Usage:
 	* [-read_buckets buckets_pickle_file]: read buckets from the specified filename
 	* [-write_superbuckets buckets_pickle_file]: pickle and write superbuckets to the specified filename
 	* [-read_superbuckets buckets_pickle_file]: read superbuckets from the specified filename
-	* [-handspace_explored (0-1]]: allows specification of the total handspace he or she wishes the program to explore when bucketing, default = 0.01
+	* [-handspace_explored (0-1]]: allows specification of the fractional handspace the program should explore when bucketing, default = 0.01
 
 You may wish to adjust the number of threads specified in both engine.py and fast_monte_carlo_evaluation/podds.c
