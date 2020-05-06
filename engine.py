@@ -273,12 +273,13 @@ class PotManager:
 		return gamestate
 
 class BucketManager:
-	def __init__(self, existing_pickle = None, pickle_to_write = None, existing_superbucket_pickle = None, superbucket_pickle_to_write = None):
+	def __init__(self, existing_pickle = None, pickle_to_write = None, existing_superbucket_pickle = None, superbucket_pickle_to_write = None, size_of_postflop_dictionary = 0.01):
 		self.all_mappings = [None, None, None, None]
 		self.existing_pickle = existing_pickle
 		self.existing_superbucket_pickle = existing_superbucket_pickle
 		self.superbucket_pickle_to_write = superbucket_pickle_to_write
 		self.pickle_to_write = pickle_to_write
+		self.size_of_postflop_dictionary = size_of_postflop_dictionary
 		self.additional_cards = {7: 3, 8: 1, 9: 1}
 		self.map()
 		self.generate_superbuckets_wrap()
@@ -329,6 +330,8 @@ class BucketManager:
 		for street in range(0, 4):
 			reference_superbucket_grouping = DSBD()
 			superbucket_grouping = DSBD()
+			print(reference_superbucket_grouping.d)
+			print(superbucket_grouping.d)
 			all_strengths = {}
 			# First create reference superbuckets using the odds solver written in C
 			
@@ -682,7 +685,7 @@ class BucketManager:
 				remaining_deck.remove(sampled_holecards[x:x + 2])
 			combos = combinations(remaining_deck, self.additional_cards[n_cards])
 			for combo in combos:
-				if n_cards == 7 and random.random() > 0.01:
+				if n_cards == 7 and random.random() > self.size_of_postflop_dictionary:
 					continue
 				#print(sampled_holecards[:8], sampled_holecards[8:] + "".join([str(item) for item in combo]))
 				hand = Hand(sampled_holecards[:8], sampled_holecards[8:] + "".join([str(item) for item in combo]))
@@ -1481,6 +1484,7 @@ if __name__ == '__main__':
 	existing_pickle = None
 	existing_superbucket_pickle = None
 	superbucket_pickle_to_write = None
+	size_of_postflop_dictionary = 0.01
 	for x in range(1, len(sys.argv)):
 		if sys.argv[x] == "-write_buckets" and len(sys.argv) > x + 1:
 			pickle_to_write = sys.argv[x + 1]
@@ -1490,6 +1494,8 @@ if __name__ == '__main__':
 			existing_superbucket_pickle = sys.argv[x + 1]
 		elif sys.argv[x] == "-write_superbuckets":
 			superbucket_pickle_to_write = sys.argv[x + 1]
-	bucketman = BucketManager(existing_pickle, pickle_to_write, existing_superbucket_pickle, superbucket_pickle_to_write)
+		elif sys.argv[x] == "-handspace_explored":
+			size_of_postflop_dictionary = float(sys.argv[x + 1])
+	bucketman = BucketManager(existing_pickle, pickle_to_write, existing_superbucket_pickle, superbucket_pickle_to_write, size_of_postflop_dictionary)
 
 
