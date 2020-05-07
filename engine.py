@@ -111,9 +111,13 @@ class memoize:
 class DSBD():
 	''' Distinct-set bidirectional dictionary: keys are guaranteed to be distinct from values
 	'''
-	def __init__(self, d = {}, inverse = {}):
+	def __init__(self, d = None, inverse = None):
 		self.d = d
+		if not d:
+			self.d = {}
 		self.inverse = inverse
+		if not self.inverse:
+			self.inverse = {}
 
 	def __setitem__(self, key, value):
 		if self.d.get(key):
@@ -142,6 +146,7 @@ class DSBD():
 
 	def get(self, key):
 		return self.d.get(key)
+
 
 class Game:
 	@staticmethod
@@ -681,22 +686,24 @@ class BucketManager:
 		old_len_bucket_to_hand = 0
 		for bucket_key in all_keys[(index * len_keys) // N_CORES:((index + 1) * len_keys) // N_CORES]:
 			#sampled_holecards_lst = random.choice(previous_map[bucket_key])
-			sampled_holecards = random.choice(previous_map[bucket_key])
-			remaining_deck = deepcopy(DECK)
-			for x in range(0, len(sampled_holecards) - 1, 2):
-				remaining_deck.remove(sampled_holecards[x:x + 2])
-			combos = combinations(remaining_deck, self.additional_cards[n_cards])
-			for combo in combos:
-				if n_cards == 7 and random.random() > self.size_of_postflop_dictionary:
-					continue
-				#print(sampled_holecards[:8], sampled_holecards[8:] + "".join([str(item) for item in combo]))
-				hand = Hand(sampled_holecards[:8], sampled_holecards[8:] + "".join([str(item) for item in combo]))
-				categorical_data = hand.collect_categorical_data()
-				#if bucket_to_hand.get(categorical_data):
-				#	bucket_to_hand[categorical_data].append(hand.holecard_str + hand.board_str)
-				#else:
-				#	bucket_to_hand[categorical_data].append(hand.holecard_str + hand.board_str)
-				hand_to_bucket[hand.holecard_str + hand.board_str] = categorical_data
+			n_iterations = 1 if n_cards == 7 else max(1, int(self.size_of_postflop_dictionary * 500)) # scale size of turn/river buckets with size of flop buckets
+			for it in range(0, n_iterations):
+				sampled_holecards = random.choice(previous_map[bucket_key])
+				remaining_deck = deepcopy(DECK)
+				for x in range(0, len(sampled_holecards) - 1, 2):
+					remaining_deck.remove(sampled_holecards[x:x + 2])
+				combos = combinations(remaining_deck, self.additional_cards[n_cards])
+				for combo in combos:
+					if n_cards == 7 and random.random() > self.size_of_postflop_dictionary:
+						continue
+					#print(sampled_holecards[:8], sampled_holecards[8:] + "".join([str(item) for item in combo]))
+					hand = Hand(sampled_holecards[:8], sampled_holecards[8:] + "".join([str(item) for item in combo]))
+					categorical_data = hand.collect_categorical_data()
+					#if bucket_to_hand.get(categorical_data):
+					#	bucket_to_hand[categorical_data].append(hand.holecard_str + hand.board_str)
+					#else:
+					#	bucket_to_hand[categorical_data].append(hand.holecard_str + hand.board_str)
+					hand_to_bucket[hand.holecard_str + hand.board_str] = categorical_data
 
 
 class Suit:
