@@ -3,5 +3,5 @@ kmeans==1.0.2
 numpy==1.18.4
 pkg-resources==0.0.0
 scikit-learn==0.22.2.post1
-scipy==1.4.1
+scipy==1.10.0
 sklearn==0.0
